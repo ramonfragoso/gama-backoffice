@@ -8,10 +8,10 @@ export const Application:React.FC = () => {
         <BrowserRouter>
             <Layout>
                 <Switch>
-                    <Route path='/clients' exact>
+                    <Route path='/clients'>
                         <Clients/>
                     </Route>
-                    <Route path='/products' exact>
+                    <Route path='/products'>
                         <Products/>
                     </Route>
                 </Switch>
