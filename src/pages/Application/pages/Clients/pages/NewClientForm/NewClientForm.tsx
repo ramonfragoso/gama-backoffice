@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Button, Input } from "../../../../../../components";
 import { Client } from "../../../../../../types/Client";
 import { AddressField, Container, Title } from "./styles";
 import { toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from "react";
 const DEFAULT_CLIENT:Client = {
     cpf: '',
     name: '',
@@ -21,6 +22,20 @@ export const NewClientForm:React.FC = () => {
 
     const [client, setClient] = useState<Client>(DEFAULT_CLIENT)
     const history = useHistory()
+
+    const params = useParams<{id?: string}>()
+
+    useEffect(() => {
+        if(params.id) {
+            setClient(getClientById(params.id))
+        }
+    }, [])
+
+    const getClientById = (id: string) => {
+        const clients:Client[] = JSON.parse(localStorage.getItem('clients') || '')
+        const foundClient = clients.find(client => client.cpf === id)
+        return foundClient || DEFAULT_CLIENT
+    }
 
     const changeClient = (name: string, value: string) => {
         console.log(client)
@@ -40,7 +55,6 @@ export const NewClientForm:React.FC = () => {
         }
         const clients = localStorage.getItem('clients')
         if(clients) {
-            console.log('aqui')
             const newClients = JSON.parse(clients)
             localStorage.setItem('clients', JSON.stringify([...newClients, client]))
             history.push('/clients')
@@ -57,19 +71,19 @@ export const NewClientForm:React.FC = () => {
         <Container>
             <Title>Cadastrar cliente</Title>
             <form onSubmit={handleSubmit}>
-                <Input onChange={changeClient} name='name' label='Nome' placeholder='Digite o nome do cliente'/>
-                <Input onChange={changeClient} name='cpf' maxLength={11} label='CPF' placeholder='Digite o CPF do cliente'/>
-                <Input onChange={changeClient} name='email' label='E-mail' placeholder='Digite o e-mail do cliente'/>
+                <Input onChange={changeClient} name='name' value={client.name} label='Nome' placeholder='Digite o nome do cliente'/>
+                <Input onChange={changeClient} name='cpf' value={client.cpf} maxLength={11} label='CPF' placeholder='Digite o CPF do cliente'/>
+                <Input onChange={changeClient} name='email' value={client.email} label='E-mail' placeholder='Digite o e-mail do cliente'/>
                 <AddressField>
-                    <Input onChange={changeClient} name='city' label='Cidade' placeholder=''/>
-                    <Input onChange={changeClient} name='state' label='Estado' placeholder='XX' maxLength={2} maxWidth='20%'/>
+                    <Input onChange={changeClient} name='city' value={client.city} label='Cidade' placeholder=''/>
+                    <Input onChange={changeClient} name='state' value={client.state} label='Estado' placeholder='XX' maxLength={2} maxWidth='20%'/>
                 </AddressField>
                 <AddressField>
-                    <Input onChange={changeClient} name='street' label='Rua' placeholder='Rua das Flores, 25...'/>
-                    <Input onChange={changeClient} name='neighborhood' label='Bairro' placeholder='Bairro Fulano...'/>
-                    <Input onChange={changeClient} name='number' label='Número' placeholder='XX' maxLength={2} maxWidth='20%'/>
+                    <Input onChange={changeClient} name='street' value={client.street} label='Rua' placeholder='Rua das Flores, 25...'/>
+                    <Input onChange={changeClient} name='neighborhood' value={client.neighborhood} label='Bairro' placeholder='Bairro Fulano...'/>
+                    <Input onChange={changeClient} name='number' value={client.number} label='Número' placeholder='XX' maxLength={2} maxWidth='20%'/>
                 </AddressField>
-                <Button type='submit'>Adicionar</Button>
+                <Button type='submit'>{params.id ? 'Atualizar' : 'Adicionar'}</Button>
             </form>
         </Container>
     )

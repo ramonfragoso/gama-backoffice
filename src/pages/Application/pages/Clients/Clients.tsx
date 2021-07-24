@@ -33,6 +33,9 @@ export const Clients:React.FC = () => {
                 <Route path={`${path}/new`}>
                     <NewClientForm/>
                 </Route>
+                <Route path={`${path}/edit/:id`}>
+                    <NewClientForm/>
+                </Route>
             </Switch>
         </Container>
     )

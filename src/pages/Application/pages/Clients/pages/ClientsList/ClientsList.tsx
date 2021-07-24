@@ -25,7 +25,7 @@ export const ClientsList:React.FC = () => {
                         <Header>Bairro</Header>
                         <Header>Número</Header>
                         <Header>Editar</Header>
-                        <Header>Deletar</Header>
+                        {/* <Header>Deletar</Header> */}
                     </Row>
                         {clients.map(client => (
                             <Row>
@@ -37,8 +37,8 @@ export const ClientsList:React.FC = () => {
                                 <Data>{client.street}</Data>
                                 <Data>{client.neighborhood}</Data>
                                 <Data>{client.number}</Data>
-                                <ButtonData onClick={() => history.push('/clients/edit')}><FiEdit3/></ButtonData>                                
-                                <ButtonData onClick={() => history.push('/clients/edit')}><FiXCircle/></ButtonData>
+                                <ButtonData onClick={() => history.push(`/clients/edit/${client.cpf}`)}><FiEdit3/></ButtonData>                                
+                                {/* <ButtonData onClick={() => history.push('/clients/edit')}><FiXCircle/></ButtonData> */}
                             </Row>
                         ))}
                 </table>
