@@ -1,14 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../../../../../../components";
 import { Client } from "../../../../../../types";
 import { Container, Header, Row, Title, Data, ButtonData } from "./styles";
 import { FiEdit3, FiXCircle } from 'react-icons/fi';
 import { useHistory } from "react-router-dom";
+import { useEffect } from "react";
 
 export const ClientsList:React.FC = () => {
 
-    const clients:Client[] = JSON.parse(localStorage.getItem('clients') || '')
     const history = useHistory()
+    const [clients, setClients] = useState<Client[]>([])
+
+    useEffect(() => {
+        if(localStorage.getItem('clients')) {
+            setClients(JSON.parse(localStorage.getItem('clients') || ''))
+        } else {
+            history.push('/clients/empty')
+        }
+    }, [])
+
 
     return (
         <Container>
