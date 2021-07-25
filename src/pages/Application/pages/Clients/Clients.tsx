@@ -9,10 +9,10 @@ import { Container, Header } from "./styles";
 export const Clients:React.FC = () => {
     const history = useHistory()
     let { path, url } = useRouteMatch();
-    const [clients, setClients] = useState<string | null>(JSON.parse(localStorage.getItem('clients') || ''))
+    const [clients, setClients] = useState<string | null>(localStorage.getItem('clients'))
 
     useEffect(() => {
-        if(!clients || clients.length===0) {
+        if(!clients) {
             history.push('/clients/empty')
         }
         setClients(localStorage.getItem('clients'))

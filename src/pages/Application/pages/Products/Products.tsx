@@ -7,10 +7,10 @@ import { Container, Header } from "./styles";
 export const Products:React.FC = () => {
     const history = useHistory()
     let { path, url } = useRouteMatch();
-    const [products, setProducts] = useState<string | null>(JSON.parse(localStorage.getItem('products') || ''))
+    const [products, setProducts] = useState<string | null>(localStorage.getItem('products'))
 
     useEffect(() => {
-        if(!products || products.length===0) {
+        if(!products) {
             history.push('/products/empty')
         }
         setProducts(localStorage.getItem('products'))
