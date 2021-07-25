@@ -31,6 +31,16 @@ export const NewClientForm:React.FC = () => {
         }
     }, [])
 
+    const updateClientById = (id: string, newClient: Client) => {
+        const clients:Client[] = JSON.parse(localStorage.getItem('clients') || '')
+        const clientIndex = clients.findIndex(client => client.cpf === id)
+        clients.splice(clientIndex,1, newClient)
+        localStorage.setItem('clients', JSON.stringify(clients))
+        history.push('/clients')
+        toast.success('Cliente atualizado com sucesso!')
+        return
+    }
+
     const getClientById = (id: string) => {
         const clients:Client[] = JSON.parse(localStorage.getItem('clients') || '')
         const foundClient = clients.find(client => client.cpf === id)
@@ -51,6 +61,10 @@ export const NewClientForm:React.FC = () => {
     const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
         if(validateClient(e)) {
             toast.error('Por favor, preencha todos os campos.')
+            return
+        }
+        if(params.id) {
+            updateClientById(params.id, client)
             return
         }
         const clients = localStorage.getItem('clients')

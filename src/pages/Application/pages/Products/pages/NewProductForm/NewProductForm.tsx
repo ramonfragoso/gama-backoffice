@@ -15,25 +15,35 @@ const DEFAULT_PRODUCT:Product = {
 
 export const NewProductForm:React.FC = () => {
 
-    const [product, setProducts] = useState<Product>(DEFAULT_PRODUCT)
+    const [product, setProduct] = useState<Product>(DEFAULT_PRODUCT)
     const history = useHistory()
 
     const params = useParams<{id?: string}>()
 
     useEffect(() => {
         if(params.id) {
-            setProducts(getProductById(params.id))
+            setProduct(getProductById(params.id))
         }
     }, [])
 
+    const updateProductById = (id: string, newProduct: Product) => {
+        const products:Product[] = JSON.parse(localStorage.getItem('products') || '')
+        const productIndex = products.findIndex(product => product.model === id)
+        products.splice(productIndex,1, newProduct)
+        localStorage.setItem('products', JSON.stringify(products))
+        history.push('/products')
+        toast.success('Produto atualizado com sucesso!')
+        return
+    }
+
     const getProductById = (id: string) => {
         const products:Product[] = JSON.parse(localStorage.getItem('products') || '')
-        const foundProduct = products.find(product => product.name === id)
+        const foundProduct = products.find(product => product.model === id)
         return foundProduct || DEFAULT_PRODUCT
     }
 
     const changeProduct = (name: string, value: string) => {
-        setProducts({...product, [name]: value})
+        setProduct({...product, [name]: value})
     }   
 
     const validateProduct = (e:React.FormEvent<HTMLFormElement>) => {
@@ -45,6 +55,10 @@ export const NewProductForm:React.FC = () => {
     const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
         if(validateProduct(e)) {
             toast.error('Por favor, preencha todos os campos.')
+            return
+        }
+        if(params.id) {
+            updateProductById(params.id, product)
             return
         }
         const products = localStorage.getItem('products')
